@@ -54,9 +54,8 @@ def TypeAnalyzer(type1,type2):
     cant_damage1 = []
     cant_damage2 = []
     immune_to = []
+    no_change = []
     
-
-
     c1 = Counter(type2[0])
     c2 = Counter(type2[1])
     c3 = Counter(type2[2])
@@ -66,8 +65,6 @@ def TypeAnalyzer(type1,type2):
 
     type1c4 = Counter(type1[3])
     type1c2 = Counter(type1[1])
-
-    #Don't 100% understand counter, but it seems to work
 
     print(str(type1[6]) + ' attacks deal 2x damage to:', str(type1[0]),'\n'+
           'and deal half damage to:',str(type1[2])+'\n'+"and can't damage:",
@@ -84,8 +81,6 @@ def TypeAnalyzer(type1,type2):
             half_damage_from.append(types)
     if fourth_damage_from == []:
         fourth_damage_from.append('none')
-    print('Half damage from:',half_damage_from,'\n'+
-          'Fourth damage from:',fourth_damage_from)
 
     for types in type1[5]:
         if (c6.get(types,0)) != 1:
@@ -98,10 +93,10 @@ def TypeAnalyzer(type1,type2):
             pass
         if types == 'none' and immune_to == 'none':
             pass
-        else:
+        if types == 'none' and immune_to == []:
             immune_to.append(types)
-    print('Immune to:',immune_to,'\n')
-    
+        else:
+            pass
 
     for types in type1[3]:
         if (c4.get(types,0)) == 1:
@@ -113,13 +108,28 @@ def TypeAnalyzer(type1,type2):
             double_damage_from.append(types)
     if quadruple_damage_from == []:
         quadruple_damage_from.append('none')
-    print('Double damage from:',double_damage_from,'\n'+
-          'Quadruple damage from:',quadruple_damage_from)
 
-    
+    doublec = Counter(double_damage_from)
+    halfc = Counter(half_damage_from)
 
+    for types in half_damage_from:
+        if (doublec.get(types,0)) == 1:
+            no_change.append(types)
 
-        
+    noc = Counter(no_change)
 
-    
-TypeAnalyzer(fighting,grass)
+    for types in half_damage_from:
+        if (noc.get(types,0)) == 1:
+            half_damage_from.remove(types)
+
+    for types in double_damage_from:
+        if (noc.get(types,0)) == 1:
+            double_damage_from.remove(types)
+
+    print('Quadruple damage from:',quadruple_damage_from,'\n'+
+        'Double damage from:',double_damage_from)
+    print('Half damage from:',half_damage_from,'\n'+
+          'Quarter damage from:',fourth_damage_from)
+    print('Immune to:',immune_to,'\n')
+            
+TypeAnalyzer(steel,dragon)
